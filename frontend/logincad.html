@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Atomenu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-title">Acesse sua conta</div>
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-login" onclick="showTab('login')">Entrar</button>
+            <button class="auth-tab" id="tab-cadastro" onclick="showTab('cadastro')">Criar Conta</button>
+        </div>
+        <form class="auth-form" id="form-login" onsubmit="return login(event)">
+            <input type="text" id="login-usuario" placeholder="Usuário ou Email" required>
+            <input type="password" id="login-senha" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+            <div class="auth-error" id="login-erro"></div>
+        </form>
+        <form class="auth-form" id="form-cadastro" style="display:none" onsubmit="return cadastrar(event)">
+            <input type="text" id="cad-usuario" placeholder="Usuário" required>
+            <input type="email" id="cad-email" placeholder="Email" required>
+            <input type="password" id="cad-senha" placeholder="Senha" required>
+            <button type="submit">Criar Conta</button>
+            <div class="auth-error" id="cadastro-erro"></div>
+            <div class="auth-success" id="cadastro-sucesso"></div>
+        </form>
+        <button id="logout-btn" style="display:none; margin-top:18px; background:#222; color:#fff; border:none; border-radius:100px; padding:10px 0; font-size:1em; font-weight:500; cursor:pointer;">Sair</button>
+    </div>
+    <a href="/dev/homeded.html" class="dev-link">loguin desenvolvedor</a>
+    <script>
+        // Troca de abas baseada no hash da URL
+        function showTab(tab) {
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-cadastro').classList.remove('active');
+            document.getElementById('form-login').style.display = 'none';
+            document.getElementById('form-cadastro').style.display = 'none';
+            if(tab === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('form-login').style.display = '';
+            } else {
+                document.getElementById('tab-cadastro').classList.add('active');
+                document.getElementById('form-cadastro').style.display = '';
+            }
+        }
+        // Detecta hash na URL para abrir a aba correta
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.location.hash === '#cadastro') showTab('cadastro');
+            else showTab('login');
+        });
+        async function login(event) {
+            event.preventDefault();
+            const usuario = document.getElementById('login-usuario').value;
+            const senha = document.getElementById('login-senha').value;
+            const erro = document.getElementById('login-erro');
+            erro.textContent = '';
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario, senha })
+            });
+            const data = await res.json();
+            if(data.sucesso) {
+                window.location.href = '/restaurante.html';
+            } else {
+                erro.textContent = data.mensagem || 'Usuário ou senha inválidos.';
+            }
+        }
+        async function cadastrar(event) {
+            event.preventDefault();
+            const usuario = document.getElementById('cad-usuario').value;
+            const email = document.getElementById('cad-email').value;
+            const senha = document.getElementById('cad-senha').value;
+            const erro = document.getElementById('cadastro-erro');
+            const sucesso = document.getElementById('cadastro-sucesso');
+            erro.textContent = '';
+            sucesso.textContent = '';
+            const res = await fetch('/api/cadastro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario, email, senha })
+            });
+            const data = await res.json();
+            if(data.sucesso) {
+                sucesso.textContent = 'Conta criada com sucesso! Faça login.';
+            } else {
+                erro.textContent = data.mensagem || 'Erro ao criar conta.';
+            }
+        }
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.reload();
+        }
+        document.getElementById('logout-btn').onclick = logout;
+
+        // Exibe botão de logout se usuário estiver logado
+        (async function checkLogin() {
+            const res = await fetch('/api/userinfo');
+            if (res.ok) {
+                document.getElementById('logout-btn').style.display = '';
+                document.getElementById('form-login').style.display = 'none';
+                document.getElementById('form-cadastro').style.display = 'none';
+                document.querySelector('.auth-tabs').style.display = 'none';
+                document.querySelector('.auth-title').textContent = 'Você já está logado!';
+            }
+        })();
+    </script>
+</body>
+</html>

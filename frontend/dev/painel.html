@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Desenvolvedor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .dev-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+        .dev-table th, .dev-table td {
+            border: 1px solid #23232a;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .dev-table th {
+            background: #18181c;
+            color: #fff;
+        }
+        .dev-table td {
+            background: #15151a;
+        }
+        .dev-table select {
+            background: #23232a;
+            color: #fff;
+            border-radius: 6px;
+            border: 1px solid #23232a;
+            padding: 4px 10px;
+        }
+        .dev-table select:focus {
+            outline: 1.5px solid #fff;
+        }
+        .dev-sucesso {
+            color: #00eaff;
+            font-size: 0.98em;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .btn-acao {
+            background: #00eaff;
+            color: #15151a;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+        .btn-acao:hover {
+            background: #00b3cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Painel do Desenvolvedor</h1>
+        <div id="dev-sucesso" class="dev-sucesso"></div>
+        <table class="dev-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>Email</th>
+                    <th>Plano</th>
+                    <th>Catálogo</th>
+                </tr>
+            </thead>
+            <tbody id="usuarios-tbody"></tbody>
+        </table>
+    </div>
+    <script>
+        async function carregarUsuarios() {
+            const res = await fetch('/api/dev/usuarios');
+            const data = await res.json();
+            const tbody = document.getElementById('usuarios-tbody');
+            tbody.innerHTML = '';
+            if (data.sucesso && data.usuarios.length) {
+                data.usuarios.forEach(u => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${u.id}</td>
+                        <td>${u.usuario}</td>
+                        <td>${u.email}</td>
+                        <td>
+                            <select onchange="atualizarPlano(${u.id}, this.value)">
+                                <option value="free" ${u.plano === 'free' ? 'selected' : ''}>Free</option>
+                                <option value="pro" ${u.plano === 'pro' ? 'selected' : ''}>Pro</option>
+                            </select>
+                        </td>
+                        <td><button onclick="window.open('/cardapio.html?id=${u.id}','_blank')" class="btn-acao">Visualizar Catálogo</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5" style="color:#aaa; text-align:center;">Nenhum usuário encontrado.</td></tr>';
+            }
+        }
+        async function atualizarPlano(id, plano) {
+            const res = await fetch(`/api/dev/usuario/${id}/plano`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ plano })
+            });
+            const data = await res.json();
+            const msg = document.getElementById('dev-sucesso');
+            if (data.sucesso) {
+                msg.textContent = 'Plano atualizado!';
+                setTimeout(() => msg.textContent = '', 1200);
+            } else {
+                msg.textContent = data.mensagem || 'Erro ao atualizar plano.';
+                setTimeout(() => msg.textContent = '', 2000);
+            }
+        }
+        carregarUsuarios();
+    </script>
+</body>
+</html>

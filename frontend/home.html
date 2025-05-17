@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Atomenu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .welcome {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .home-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            align-items: center;
+            margin-top: 18px;
+        }
+        .logout-btn {
+            background: #23232a;
+            color: #fff;
+            border: none;
+            border-radius: 100px;
+            padding: 10px 32px;
+            font-size: 1.05em;
+            font-weight: 600;
+            margin-top: 18px;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+        }
+        .logout-btn:hover {
+            background: #fff;
+            color: #23232a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="welcome">Bem-vindo ao Cardápio Digital!</h1>
+        <div id="user-info" style="text-align:center; margin-bottom:18px;"></div>
+        <div class="home-actions">
+            <a href="/restaurante.html" class="restaurante-btn">Gerenciar Cardápio</a>
+            <button class="logout-btn" onclick="logout()">Sair</button>
+        </div>
+    </div>
+    <script>
+        async function getUserInfo() {
+            const res = await fetch('/api/userinfo');
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('user-info').innerHTML =
+                    `<b>Usuário:</b> ${data.usuario} <br><b>Email:</b> ${data.email}`;
+            } else {
+                window.location.href = '/logincad.html';
+            }
+        }
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/logincad.html';
+        }
+        getUserInfo();
+    </script>
+</body>
+</html>

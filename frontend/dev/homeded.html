@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Atomenu - Login Desenvolvedor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .dev-form-container {
+            margin: 80px auto 0 auto;
+            max-width: 340px;
+            background: rgba(20,20,24,0.98);
+            border-radius: 16px;
+            box-shadow: 0 4px 32px 0 #0007;
+            padding: 32px 24px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .dev-form input {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        .dev-error {
+            color: #ff5252;
+            font-size: 0.98em;
+            text-align: center;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dev-form-container">
+        <h1>Área do Desenvolvedor</h1>
+        <form class="dev-form" onsubmit="return devLogin(event)">
+            <input type="password" id="dev-senha" placeholder="Senha de desenvolvedor" required autocomplete="off">
+            <button type="submit">Entrar</button>
+            <div class="dev-error" id="dev-erro"></div>
+        </form>
+    </div>
+    <script>
+        function devLogin(event) {
+            event.preventDefault();
+            const senha = document.getElementById('dev-senha').value;
+            const erro = document.getElementById('dev-erro');
+            erro.textContent = '';
+            if (senha === 'Gomesgabriel14') {
+                window.location.href = '/dev/painel.html';
+            } else {
+                erro.textContent = 'Senha incorreta.';
+            }
+        }
+    </script>
+</body>
+</html>

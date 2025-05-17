@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos - Atomenu</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .planos-container {
+            background: rgba(20,20,24,0.98);
+            border-radius: 18px;
+            box-shadow: 0 4px 32px 0 #0007;
+            max-width: 600px;
+            margin: 48px auto 0 auto;
+            padding: 38px 32px 28px 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .planos-title {
+            font-size: 2.1em;
+            font-weight: 800;
+            margin-bottom: 18px;
+            letter-spacing: 1.2px;
+            color: #fff;
+            text-align: center;
+        }
+        .planos-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            width: 100%;
+        }
+        .plano-card {
+            flex: 1 1 220px;
+            min-width: 220px;
+            background: #101014;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #00eaff22;
+            padding: 28px 18px 22px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1.5px solid #ededed;
+            color: #fff;
+            transition: box-shadow 0.25s, transform 0.18s;
+            margin-bottom: 12px;
+        }
+        .plano-card:hover {
+            box-shadow: 0 4px 24px #00eaff33;
+            transform: translateY(-4px) scale(1.03);
+        }
+        .plano-nome {
+            font-size: 1.25em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #00eaff;
+        }
+        .plano-preco {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 12px;
+        }
+        .plano-beneficios {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 16px 0;
+            text-align: left;
+            color: #bdbdbd;
+            font-size: 1.05em;
+        }
+        .plano-beneficios li {
+            margin-bottom: 6px;
+            font-size: 1em;
+        }
+        .plano-btn {
+            background: linear-gradient(90deg, #fff 0%, #23232a 100%);
+            color: #101014;
+            border: none;
+            border-radius: 100px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 12px 36px;
+            box-shadow: 0 2px 12px 0 #0002;
+            font-size: 1em;
+            margin-top: 8px;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+        }
+        .plano-btn[disabled], .plano-btn:disabled {
+            background: #23232a;
+            color: #bdbdbd;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .plano-btn:hover:not([disabled]) {
+            background: linear-gradient(90deg, #23232a 0%, #fff 100%);
+            color: #fff;
+            box-shadow: 0 4px 24px 0 #0004;
+        }
+        .planos-voltar {
+            color: #00eaff;
+            text-decoration: underline;
+            margin-top: 24px;
+            text-align: center;
+            display: block;
+            font-size: 1.08em;
+        }
+        @media (max-width: 700px) {
+            .planos-container { max-width: 98vw; padding: 18px 4vw 18px 4vw; }
+            .planos-list { flex-direction: column; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="planos-container">
+        <div class="planos-title">Escolha o plano ideal para seu restaurante</div>
+        <div class="planos-list">
+            <div class="plano-card">
+                <div class="plano-nome">Grátis</div>
+                <div class="plano-preco">R$ 0</div>
+                <ul class="plano-beneficios">
+                    <li><b>Cardápio digital público</b> com link e QR Code</li>
+                    <li><b>Personalização de cores</b> e título do cardápio</li>
+                    <li><b>Até 2 categorias</b> e <b>10 produtos</b> no total</li>
+                    <li><b>1 promoção ativa</b> por vez</li>
+                    <li><b>Upload de imagens</b> para produtos</li>
+                    <li>Visualização otimizada para celular</li>
+                    <li>Botão WhatsApp para pedidos</li>
+                    <li>Suporte básico</li>
+                </ul>
+                <button class="plano-btn" disabled>Plano Atual</button>
+                <button class="plano-btn" style="background:linear-gradient(90deg,#00eaff 0%,#23232a 100%);color:#101014;" onclick="window.open('https://wa.me/5568999090567?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20o%20plano%20Gr%C3%A1tis%20do%20Atomenu!','_blank')">Falar com Suporte</button>
+            </div>
+            <div class="plano-card">
+                <div class="plano-nome">Pro</div>
+                <div class="plano-preco">R$ 19/mês</div>
+                <ul class="plano-beneficios">
+                    <li><b>Tudo do plano Grátis</b></li>
+                    <li><b>Categorias e produtos ilimitados</b></li>
+                    <li><b>Promoções ilimitadas</b></li>
+                    <li><b>Carrinho de pedidos</b> integrado ao WhatsApp</li>
+                    <li><b>Remoção da marca Atomenu</b> do cardápio público</li>
+                    <li><b>Suporte prioritário</b> por e-mail</li>
+                    <li><b>Mais opções de personalização visual</b></li>
+                </ul>
+                <button class="plano-btn" onclick="window.open('https://wa.me/5568999090567?text=Ol%C3%A1%2C%20quero%20assinar%20o%20Plano%20Pro%20do%20Atomenu!','_blank')">Assinar</button>
+            </div>
+        </div>
+        <a href="/index.html" class="planos-voltar">Voltar para o início</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomenu</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .public-container {
+            background: rgba(20,20,24,0.98);
+            border-radius: 18px;
+            box-shadow: 0 4px 32px 0 #0007;
+            max-width: 600px;
+            margin: 32px auto 0 auto;
+            padding: 32px 18px 24px 18px;
+        }
+        .public-categoria {
+            margin-bottom: 36px;
+        }
+        .public-categoria-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 18px 0;
+            letter-spacing: 1px;
+            border-left: 5px solid #00eaff;
+            padding-left: 12px;
+        }
+        .public-categoria-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: flex-start;
+        }
+        .public-produto-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            background: #101014;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #00eaff22;
+            padding: 16px 10px 16px 0;
+            margin-bottom: 18px;
+            border: 1.5px solid #ededed;
+            transition: box-shadow 0.25s, transform 0.18s;
+            animation: fadeInUp 0.7s cubic-bezier(.23,1.01,.32,1) both;
+            color: #fff;
+        }
+        .public-produto-card * {
+            color: #fff !important;
+        }
+        .public-produto-card .public-produto-preco {
+            color: #00eaff !important;
+        }
+        .public-produto-card .public-produto-promocao {
+            color: #ff9800 !important;
+        }
+        .public-produto-card .public-produto-desc {
+            color: #bdbdbd !important;
+        }
+        .public-produto-card .public-btn-whatsapp {
+            background: #fff;
+            color: #101014 !important;
+            border: none;
+            border-radius: 100px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 24px;
+            margin-top: 8px;
+            font-size: 1em;
+            display: inline-block;
+            box-shadow: 0 1px 6px 0 #0002;
+            transition: background 0.18s, color 0.18s;
+        }
+        .public-produto-card .public-btn-whatsapp:hover {
+            background: #23232a;
+            color: #fff !important;
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: none; }
+        }
+        .public-produto-img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #23232a;
+            box-shadow: 0 2px 12px #0003;
+        }
+        .public-produto-title {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        .public-produto-preco {
+            color: #00eaff;
+            font-weight: 700;
+            font-size: 1.08em;
+            margin-bottom: 2px;
+        }
+        .public-produto-promocao {
+            color: #ff9800;
+            font-weight: bold;
+            margin-left: 8px;
+            font-size: 1.1em;
+        }
+        .public-produto-desc {
+            color: #bdbdbd;
+            font-size: 1em;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .public-footer {
+            text-align: center;
+            color: #aaa;
+            font-size: 0.95em;
+            margin-top: 32px;
+        }
+        .public-title {
+            text-align: center;
+            font-size: 2.1em;
+            font-weight: 800;
+            margin-bottom: 18px;
+            letter-spacing: 1.2px;
+            color: #fff;
+        }
+        .public-carrinho-area {
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            box-shadow: 0 2px 16px 0 #0005;
+            padding: 18px 16px 14px 16px;
+            color: #fff;
+            margin-top: 32px;
+            margin-bottom: 18px;
+            border: 1.5px solid #23232a;
+            max-width: 420px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .public-carrinho-area h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #00eaff;
+        }
+        .public-carrinho-area ul {
+            padding: 0;
+            margin: 0 0 10px 0;
+        }
+        .public-carrinho-area li {
+            margin-bottom: 6px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1em;
+        }
+        .public-carrinho-area button {
+            background: #25d366;
+            color: #fff;
+            border: none;
+            border-radius: 100px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 24px;
+            margin-top: 6px;
+            font-size: 1em;
+            display: inline-block;
+        }
+        .public-carrinho-area button:hover {
+            background: #128c7e;
+        }
+        .public-logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .public-logo-img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px #00eaff44;
+            background: #ededed;
+        }
+        @media (max-width: 700px) {
+            .public-container { max-width: 98vw; padding: 12px 2vw; }
+            .public-categoria-list { flex-direction: column; gap: 18px; }
+            .public-produto-card { min-width: 0; max-width: 100%; }
+            .public-produto-img { width: 90vw; max-width: 98vw; height: 38vw; min-height: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="public-container">
+        <div class="public-header"></div>
+        <h1 class="public-title" id="public-titulo">Cardápio Digital</h1>
+        <div id="public-cardapio">Carregando...</div>
+    </div>
+    <div class="public-footer">Powered by AllCatalog</div>
+    <script>
+        // Impede voltar para página anterior (admin) por segurança
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+        }
+        // Pega o usuarioId da URL (?id=123)
+        function getUsuarioId() {
+            const match = window.location.search.match(/[?&]id=(\d+)/);
+            if (match) return match[1];
+            // fallback para /cardapio/123
+            const pathMatch = window.location.pathname.match(/cardapio\/(\d+)/);
+            if (pathMatch) return pathMatch[1];
+            return null;
+        }
+        const usuarioId = getUsuarioId();
+        if (!usuarioId) {
+            document.getElementById('public-cardapio').innerHTML = '<div style="color:#aaa;">Cardápio não encontrado.</div>';
+        } else {
+            let planoPro = false;
+            // Verifica se o usuário é PRO
+            fetch('/api/dev/usuarios').then(r=>r.json()).then(devData => {
+                if (devData.sucesso && devData.usuarios) {
+                    const usuario = devData.usuarios.find(u => u.id == usuarioId);
+                    if (usuario && usuario.plano === 'pro') planoPro = true;
+                }
+            }).finally(() => {
+                fetch('/api/cardapio_publico/' + usuarioId)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (!data.categorias || !data.categorias.length) {
+                            document.getElementById('public-cardapio').innerHTML = '<div style="color:#aaa;">Nenhuma categoria cadastrada.</div>';
+                            return;
+                        }
+                        let html = '';
+                        let cart = [];
+                        data.categorias.forEach(cat => {
+                            html += `<div class='public-categoria'>`;
+                            html += `<div class='public-categoria-title'>${cat.nome}</div>`;
+                            html += `<div class='public-categoria-list'>`;
+                            if (cat.itens && cat.itens.length) {
+                                cat.itens.forEach(item => {
+                                    html += `<div class='public-produto-card'>`;
+                                    if(item.imagem) {
+                                        html += `<img src='${item.imagem && item.imagem.startsWith('/') ? item.imagem : '/uploads/' + item.imagem}' alt='img' class='public-produto-img'>`;
+                                    }
+                                    html += `<div class='public-produto-title'>${item.titulo}</div>`;
+                                    html += `<div class='public-produto-preco'>R$ ${item.preco.toFixed(2)}${item.promocao ? '<span class=\"public-produto-promocao\">🔥 Promoção</span>' : ''}</div>`;
+                                    if(item.descricao) html += `<div class='public-produto-desc'>${item.descricao}</div>`;
+                                    if(planoPro) {
+                                        html += `<button class='public-btn-whatsapp' onclick='adicionarAoCarrinho(${JSON.stringify({id:item.id,titulo:item.titulo,preco:item.preco})})'>Adicionar ao Carrinho</button>`;
+                                    }
+                                    html += `</div>`;
+                                });
+                            } else {
+                                html += `<div style='color:#aaa;font-size:1em;margin-bottom:12px;'>Nenhum item nesta categoria.</div>`;
+                            }
+                            html += `</div></div>`;
+                        });
+                        if(planoPro) {
+                            html += `<div class='public-carrinho-area'><h2>Carrinho</h2><div id='carrinho-lista'></div><div id='carrinho-total'></div><button class='public-btn-whatsapp' onclick='enviarPedidoWhatsapp()'>Enviar Pedido via WhatsApp</button></div>`;
+                        }
+                        document.getElementById('public-cardapio').innerHTML = html;
+                        if(planoPro) inicializarCarrinho();
+                    })
+                    .catch(() => {
+                        document.getElementById('public-cardapio').innerHTML = '<div style="color:#aaa;">Erro ao carregar cardápio.</div>';
+                    });
+            });
+
+            // Funções do carrinho (apenas para plano PRO)
+            function inicializarCarrinho() {
+                window.carrinho = [];
+                atualizarCarrinho();
+            }
+            window.adicionarAoCarrinho = function(item) {
+                if(!window.carrinho) window.carrinho = [];
+                window.carrinho.push(item);
+                atualizarCarrinho();
+            }
+            function atualizarCarrinho() {
+                const lista = document.getElementById('carrinho-lista');
+                const total = document.getElementById('carrinho-total');
+                if(!window.carrinho || !window.carrinho.length) {
+                    lista.innerHTML = '<div style="color:#aaa;">Carrinho vazio.</div>';
+                    total.innerHTML = '';
+                    return;
+                }
+                let html = '<ul style="list-style:none;padding:0;">';
+                let soma = 0;
+                window.carrinho.forEach((item,i) => {
+                    html += `<li>${item.titulo} - R$ ${item.preco.toFixed(2)} <button onclick='removerDoCarrinho(${i})' style='margin-left:8px;background:#ff5252;color:#fff;border:none;border-radius:6px;padding:2px 8px;cursor:pointer;'>Remover</button></li>`;
+                    soma += item.preco;
+                });
+                html += '</ul>';
+                lista.innerHTML = html;
+                total.innerHTML = `<b>Total: R$ ${soma.toFixed(2)}</b>`;
+            }
+            window.removerDoCarrinho = function(idx) {
+                window.carrinho.splice(idx,1);
+                atualizarCarrinho();
+            }
+            window.enviarPedidoWhatsapp = function() {
+                if(!window.carrinho || !window.carrinho.length) return alert('Carrinho vazio!');
+                // Buscar mensagem personalizada do restaurante
+                fetch('/api/msg_personalizada_publica/' + usuarioId).then(r => r.json()).then(msgData => {
+                    let msgBase = (msgData.sucesso && msgData.msg) ? msgData.msg : 'Olá, quero pedir';
+                    let msg = msgBase + ': ';
+                    window.carrinho.forEach((item, idx) => {
+                        msg += `${item.titulo}`;
+                        if (window.carrinho.length > 2 && idx < window.carrinho.length-2) msg += ', ';
+                        else if (idx === window.carrinho.length-2) msg += ' e ';
+                    });
+                    msg += `\nTotal: R$ ${window.carrinho.reduce((a,b)=>a+b.preco,0).toFixed(2)}`;
+                    // Buscar número do WhatsApp do restaurante
+                    fetch('/api/whatsapp?id='+usuarioId).then(r => r.json()).then(data => {
+                        if(!data.numero) return alert('Restaurante não configurou WhatsApp!');
+                        const link = `https://wa.me/${data.numero}?text=${encodeURIComponent(msg)}`;
+                        window.open(link,'_blank');
+                    });
+                });
+            }
+        }
+
+        // Carregar título público dinâmico
+        fetch('/api/titulo_publico/' + usuarioId)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('public-titulo').textContent = (data && data.titulo) ? data.titulo : 'Cardápio Digital';
+            });
+        // Carregar cores personalizadas do cardápio público
+        fetch('/api/cores_publico/' + usuarioId)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.cores) {
+                    if (data.cores.fundo) {
+                        document.body.style.background = data.cores.fundo;
+                        const container = document.querySelector('.public-container');
+                        if (container) container.style.background = data.cores.fundo;
+                    }
+                    if (data.cores.destaque) {
+                        const style = document.createElement('style');
+                        style.innerHTML = `.public-categoria-title { border-left: 5px solid ${data.cores.destaque} !important; }`;
+                        document.head.appendChild(style);
+                    }
+                    if (data.cores.card) {
+                        const style = document.createElement('style');
+                        style.innerHTML = `.public-produto-card { background: ${data.cores.card} !important; }`;
+                        document.head.appendChild(style);
+                    }
+                }
+            });
+    </script>
+</body>
+</html>

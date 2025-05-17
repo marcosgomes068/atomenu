@@ -1,0 +1,398 @@
+/* Estilos globais preto e branco minimalista */
+body {
+    background: #101014;
+    color: #f5f5f5;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+.container, .auth-container {
+    background: rgba(20,20,24,0.98);
+    border-radius: 18px;
+    box-shadow: 0 4px 32px 0 #0007;
+    max-width: 420px;
+    margin: 48px auto 0 auto;
+    padding: 38px 32px 28px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+h1, .auth-title {
+    color: #fff;
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 18px;
+    text-align: center;
+    letter-spacing: 1.2px;
+}
+.title {
+    text-align: center;
+    margin-bottom: 32px;
+}
+.subtitle {
+    text-align: center;
+    margin-bottom: 38px;
+    font-size: 1.18em;
+    line-height: 1.7em;
+}
+input, button {
+    background: #18181c;
+    color: #fff;
+    border: 1.5px solid #23232a;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 1.08em;
+    outline: none;
+    margin-bottom: 10px;
+    transition: border 0.18s, background 0.18s, color 0.18s;
+}
+input:focus {
+    border: 1.5px solid #fff;
+    background: #16161a;
+}
+button, .auth-form button, .restaurante-btn, .entrar-btn, .criar-btn {
+    background: linear-gradient(90deg, #fff 0%, #23232a 100%);
+    color: #101014;
+    border: none;
+    border-radius: 100px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    margin-bottom: 0;
+    padding: 12px 36px;
+    box-shadow: 0 2px 12px 0 #0002;
+}
+button:hover, .auth-form button:hover, .restaurante-btn:hover, .entrar-btn:hover, .criar-btn:hover {
+    background: linear-gradient(90deg, #23232a 0%, #fff 100%);
+    color: #fff;
+    box-shadow: 0 4px 24px 0 #0004;
+}
+.auth-tabs, .actions-home {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+.auth-tab {
+    background: none;
+    border: none;
+    color: #bdbdbd;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 18px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border 0.15s;
+}
+.auth-tab.active {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+}
+.auth-form, #form-add-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+    width: 100%;
+    justify-content: center;
+}
+.auth-form input, #form-add-item input {
+    flex: 1 1 120px;
+    min-width: 0;
+}
+#form-add-item button {
+    flex: 0 0 auto;
+}
+#lista-cardapio {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+#lista-cardapio li {
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 2px 8px 0 #0002;
+    border: 1px solid #23232a;
+}
+#lista-cardapio button {
+    background: #fff;
+    color: #101014;
+    border: none;
+    border-radius: 100px;
+    font-size: 0.98em;
+    font-weight: 500;
+    padding: 7px 22px;
+    margin-top: 8px;
+    align-self: flex-end;
+    box-shadow: 0 1px 6px 0 #0002;
+}
+#lista-cardapio button:hover {
+    background: #23232a;
+    color: #fff;
+    border: 1.5px solid #fff;
+}
+.auth-error {
+    color: #ff5252;
+    font-size: 0.98em;
+    text-align: center;
+    margin-top: 2px;
+}
+.auth-success {
+    color: #fff;
+    font-size: 0.98em;
+    text-align: center;
+    margin-top: 2px;
+}
+.dev-link {
+    display: block;
+    text-align: center;
+    color: #bdbdbd;
+    font-size: 1.08em;
+    opacity: 0.85;
+    text-decoration: underline dotted;
+    margin: 28px auto 0 auto;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s, color 0.2s;
+    cursor: pointer;
+}
+.dev-link:hover {
+    opacity: 1;
+    color: #fff;
+    text-decoration: underline;
+}
+.form-bloco {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 16px;
+    width: 100%;
+    justify-content: center;
+}
+.input-whatsapp {
+    width: 60%;
+    min-width: 180px;
+}
+.input-categoria {
+    min-width: 180px;
+}
+.btn-principal {
+    background: linear-gradient(90deg, #fff 0%, #23232a 100%);
+    color: #101014;
+    border: none;
+    border-radius: 100px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 12px 36px;
+    box-shadow: 0 2px 12px 0 #0002;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.btn-principal:hover {
+    background: linear-gradient(90deg, #23232a 0%, #fff 100%);
+    color: #fff;
+    box-shadow: 0 4px 24px 0 #0004;
+}
+.qr-area {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+}
+.categoria-bloco {
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 18px 18px 12px 18px;
+    margin-bottom: 18px;
+    color: #fff;
+    box-shadow: 0 2px 8px 0 #0002;
+    border: 1px solid #23232a;
+    width: 100%;
+}
+.categoria-bloco h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.15em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.categoria-bloco ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+}
+.categoria-bloco li {
+    margin-bottom: 8px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1em;
+}
+.itens-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+.item-bloco {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 14px 12px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px 0 #0002;
+    border: 1px solid #23232a;
+    min-height: 70px;
+}
+.item-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #23232a;
+    flex-shrink: 0;
+}
+.item-img-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background: #23232a;
+    flex-shrink: 0;
+}
+.item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.item-titulo-preco {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.08em;
+    font-weight: 600;
+}
+.item-preco {
+    color: #00eaff;
+    font-weight: 600;
+    margin-left: 4px;
+}
+.item-promocao {
+    color: #ff9800;
+    font-weight: bold;
+    margin-left: 8px;
+}
+.item-desc {
+    color: #bdbdbd;
+    font-size: 0.98em;
+    margin-bottom: 2px;
+}
+.item-botoes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+.btn-acao {
+    background: #fff;
+    color: #101014;
+    border: none;
+    border-radius: 100px;
+    font-size: 0.98em;
+    font-weight: 500;
+    padding: 7px 18px;
+    box-shadow: 0 1px 6px 0 #0002;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.btn-acao:hover {
+    background: #23232a;
+    color: #fff;
+    border: 1.5px solid #fff;
+}
+#banner-feedback {
+  min-width: 220px;
+  max-width: 90vw;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  transition: opacity 0.3s;
+  opacity: 0.95;
+}
+.atom-logo {
+    display: flex;
+    justify-content: center;
+    margin-top: 38px;
+    margin-bottom: 38px;
+}
+.atomenu-title-efeito {
+    color: #00eaff;
+    font-weight: 900;
+    font-size: 2.2em;
+    letter-spacing: 2px;
+}
+@media (max-width: 600px) {
+    .container, .auth-container {
+        max-width: 98vw;
+        padding: 18px 4vw 18px 4vw;
+    }
+    h1, .auth-title {
+        font-size: 1.3em;
+    }
+    #lista-cardapio li {
+        padding: 10px 8px;
+    }
+    .form-bloco {
+        flex-direction: column;
+        gap: 6px;
+    }
+    .input-whatsapp, .input-categoria {
+        width: 100%;
+        min-width: 0;
+    }
+    .categoria-bloco {
+        padding: 10px 8px 8px 8px;
+    }
+    .item-bloco {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 10px 6px;
+    }
+    .item-img, .item-img-placeholder {
+        width: 48px;
+        height: 48px;
+    }
+    .item-titulo-preco {
+        font-size: 1em;
+    }
+    .item-botoes {
+        flex-direction: column;
+        gap: 6px;
+    }
+}
+.input-logo-restaurante {
+    margin-bottom: 10px;
+}
+.label-block {
+    display: block;
+    margin-bottom: 8px;
+}
+.label-logo {
+    width: 100%;
+    text-align: left;
+}
+.btn-baixar-qr {
+    margin-top: 12px;
+    display: none;
+}

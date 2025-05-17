@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomenu</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .painel-section {
+            background: rgba(255,255,255,0.02);
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #0002;
+            margin-bottom: 28px;
+            padding: 22px 18px 18px 18px;
+            border: 1.5px solid #23232a;
+        }
+        .painel-section-title {
+            font-size: 1.18em;
+            font-weight: 700;
+            color: #00eaff;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        .painel-section + .painel-section { margin-top: 0; }
+        .painel-sep { border-bottom: 1.5px solid #23232a; margin: 18px 0 18px 0; }
+        .painel-btns-top { display: flex; gap: 12px; margin-bottom: 18px; justify-content: center; }
+        .input-msg-personalizada {
+            min-width: 180px;
+            flex: 2;
+        }
+        .msg-personalizada-feedback {
+            color: #00eaff;
+            font-size: 0.98em;
+        }
+        .logo-preview-area {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .logo-preview-img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #0002;
+            background: #ededed;
+            margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+            .painel-section { padding: 10px 4vw 10px 4vw; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meu Cardápio</h1>
+        <div class="painel-btns-top">
+            <button id="btn-ver-cardapio-publico" class="btn-principal">Ver Cardápio Público</button>
+            <button id="btn-gerar-qr" class="btn-principal">Gerar QR Code do Cardápio</button>
+        </div>
+        <div class="painel-section">
+            <div class="painel-section-title">WhatsApp do Restaurante</div>
+            <form id="form-whatsapp" class="form-bloco" autocomplete="off">
+                <input type="text" id="whatsapp-numero" placeholder="Número do WhatsApp (ex: 55999999999)" required class="input-whatsapp">
+                <button type="submit" class="btn-principal">Salvar WhatsApp</button>
+            </form>
+        </div>
+        <div class="painel-section">
+            <div class="painel-section-title">Categorias</div>
+            <form id="form-add-categoria" class="form-bloco" autocomplete="off">
+                <input type="text" id="categoria-nome" placeholder="Nova categoria (ex: Pratos, Bebidas)" required class="input-categoria">
+                <button type="submit" class="btn-principal">Adicionar Categoria</button>
+            </form>
+            <div id="categorias-area"></div>
+        </div>
+        <div class="painel-section">
+            <div class="painel-section-title">QR Code do Cardápio</div>
+            <div id="qr-code-area" class="qr-area"></div>
+            <button id="btn-baixar-qr" class="btn-principal btn-baixar-qr">Baixar QR Code</button>
+        </div>
+        <div class="painel-section">
+            <div class="painel-section-title">Mensagem Personalizada do Pedido</div>
+            <form id="form-msg-personalizada" class="form-bloco" autocomplete="off">
+                <input type="text" id="msg-personalizada" placeholder="Ex: Olá, quero pedir" required class="input-msg-personalizada">
+                <button type="submit" class="btn-principal">Salvar Mensagem</button>
+            </form>
+            <div id="msg-personalizada-feedback" class="msg-personalizada-feedback"></div>
+        </div>
+        <div class="painel-section">
+            <div class="painel-section-title">Título do Cardápio Público</div>
+            <form id="form-titulo-publico" class="form-bloco" autocomplete="off">
+                <input type="text" id="titulo-publico" placeholder="Ex: Cardápio do Restaurante" required class="input-titulo-publico">
+                <button type="submit" class="btn-principal">Salvar Título</button>
+            </form>
+            <div id="titulo-publico-feedback" class="msg-personalizada-feedback"></div>
+        </div>
+        <div class="painel-section">
+            <div class="painel-section-title">Personalizar Cores do Cardápio Público</div>
+            <form id="form-cores-publico" class="form-bloco" autocomplete="off">
+                <label class="label-block">Cor de fundo: <input type="color" id="cor-fundo-publico" value="#101014"></label>
+                <label class="label-block">Cor de destaque (borda/categoria): <input type="color" id="cor-destaque-publico" value="#00eaff"></label>
+                <label class="label-block">Cor dos cards: <input type="color" id="cor-card-publico" value="#101014"></label>
+                <button type="submit" class="btn-principal">Salvar Cores</button>
+            </form>
+            <div id="cores-publico-feedback" class="msg-personalizada-feedback"></div>
+        </div>
+    </div>
+    <script>
+        // Protege a página: só permite acesso se estiver logado
+        (async function checkLogin() {
+            const res = await fetch('/api/userinfo');
+            if (!res.ok) {
+                window.location.href = '/logincad.html';
+            }
+        })();
+        async function carregarCardapio() {
+            const res = await fetch('/api/cardapio');
+            const data = await res.json();
+            const area = document.getElementById('categorias-area');
+            area.innerHTML = '';
+            if (data.sucesso && data.categorias && data.categorias.length) {
+                data.categorias.forEach(cat => {
+                    const div = document.createElement('div');
+                    div.className = 'categoria-bloco painel-section';
+                    div.innerHTML = `<h3 class="painel-section-title">${cat.nome} <button onclick="removerCategoria(${cat.id})">Remover</button></h3>`;
+                    const ul = document.createElement('ul');
+                    // Form para adicionar item na categoria
+                    const form = document.createElement('form');
+                    form.className = 'form-add-item';
+                    form.enctype = 'multipart/form-data';
+                    form.innerHTML = `
+                        <input type="text" placeholder="Título" required class="input-item-titulo">
+                        <input type="text" placeholder="Descrição" class="input-item-desc">
+                        <input type="number" placeholder="Preço" step="0.01" min="0" required class="input-item-preco">
+                        <input type="file" accept="image/*" class="input-img">
+                        <button type="submit" class="btn-principal">Adicionar Item</button>
+                    `;
+                    form.onsubmit = async function(e) {
+                        e.preventDefault();
+                        const [titulo, descricao, preco] = Array.from(form.querySelectorAll('input[type=text],input[type=number]')).map(i=>i.value);
+                        const fileInput = form.querySelector('input[type=file]');
+                        // Adiciona item primeiro
+                        const res = await fetch('/api/cardapio', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ categoriaId: cat.id, titulo, descricao, preco })
+                        });
+                        const data = await res.json();
+                        if (!data.sucesso && data.mensagem) {
+                            alert(data.mensagem);
+                            return;
+                        }
+                        // Se imagem foi selecionada, faz upload
+                        if (fileInput.files && fileInput.files[0] && data.id) {
+                            const formData = new FormData();
+                            formData.append('imagem', fileInput.files[0]);
+                            fetch(`/api/cardapio/${data.id}/imagem`, {
+                                method: 'POST',
+                                body: formData
+                            }).then(r => r.json()).then(resp => {
+                                if (!resp.sucesso) {
+                                    showBanner(resp.mensagem || 'Erro ao enviar imagem!', 'red');
+                                    return;
+                                }
+                                form.reset();
+                                carregarCardapio();
+                            }).catch(() => showBanner('Erro ao enviar imagem!', 'red'));
+                        } else {
+                            form.reset();
+                            carregarCardapio();
+                        }
+                    };
+                    div.appendChild(form);
+                    // Lista de itens
+                    ul.className = 'itens-lista';
+                    if (cat.itens && cat.itens.length) {
+                        cat.itens.forEach(item => {
+                            ul.innerHTML += `
+<li class="item-bloco">
+    ${item.imagem ? `<img src='${item.imagem.startsWith('/') ? item.imagem : '/uploads/' + item.imagem}' alt='img' class='item-img'>` : '<div class="item-img-placeholder"></div>'}
+    <div class="item-info">
+        <div class="item-titulo-preco">
+            <b>${item.titulo}</b>
+        </div>
+        <div class="item-desc">${item.descricao||''}</div>
+        <div class="item-botoes">
+            <button onclick="removerItem(${item.id})" class="btn-acao">Remover</button>
+        </div>
+    </div>
+</li>
+`;
+                        });
+                    } else {
+                        ul.innerHTML = '<li style="color:#aaa;">Nenhum item nesta categoria.</li>';
+                    }
+                    div.appendChild(ul);
+                    area.appendChild(div);
+                });
+            } else {
+                area.innerHTML = '<div style="color:#aaa;">Nenhuma categoria cadastrada.</div>';
+            }
+        }
+        async function adicionarCategoria(event) {
+            event.preventDefault();
+            const nome = document.getElementById('categoria-nome').value;
+            const res = await fetch('/api/categorias', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome })
+            });
+            const data = await res.json();
+            if (!data.sucesso && data.mensagem) {
+                alert(data.mensagem);
+            }
+            document.getElementById('form-add-categoria').reset();
+            carregarCardapio();
+        }
+        async function removerCategoria(id) {
+            await fetch(`/api/categorias/${id}`, { method: 'DELETE' });
+            carregarCardapio();
+        }
+        async function adicionarItem(categoriaId, titulo, descricao, preco) {
+            const res = await fetch('/api/cardapio', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ categoriaId, titulo, descricao, preco })
+            });
+            const data = await res.json();
+            if (!data.sucesso && data.mensagem) {
+                alert(data.mensagem);
+            }
+            carregarCardapio();
+        }
+        async function removerItem(id) {
+            await fetch(`/api/cardapio/${id}`, { method: 'DELETE' });
+            carregarCardapio();
+        }
+        async function togglePromocao(id, promocao) {
+            await fetch(`/api/cardapio/${id}/promocao`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ promocao })
+            });
+            carregarCardapio();
+        }
+        async function pedirWhatsapp(titulo, preco) {
+            const numero = document.getElementById('whatsapp-numero').value;
+            if (!numero) return alert('Configure o número do WhatsApp primeiro!');
+            const msg = encodeURIComponent(`Olá! Gostaria de pedir: ${titulo} - R$ ${preco.toFixed(2)}`);
+            window.open(`https://wa.me/${numero}?text=${msg}`);
+        }
+        // Função para exibir feedback colorido
+        function showBanner(msg, cor = 'red') {
+            let banner = document.getElementById('banner-feedback');
+            if (!banner) {
+                banner = document.createElement('div');
+                banner.id = 'banner-feedback';
+                banner.style.position = 'fixed';
+                banner.style.top = '10px';
+                banner.style.left = '50%';
+                banner.style.transform = 'translateX(-50%)';
+                banner.style.zIndex = '9999';
+                banner.style.padding = '10px 20px';
+                banner.style.borderRadius = '8px';
+                banner.style.fontWeight = 'bold';
+                banner.style.color = '#fff';
+                banner.style.fontSize = '1.1em';
+                document.body.appendChild(banner);
+            }
+            banner.style.background = cor;
+            banner.textContent = msg;
+            banner.style.display = 'block';
+            setTimeout(() => { banner.style.display = 'none'; }, 3500);
+        }
+        document.getElementById('form-add-categoria').onsubmit = adicionarCategoria;
+        document.getElementById('form-whatsapp').onsubmit = async function(e) {
+            e.preventDefault();
+            const numero = document.getElementById('whatsapp-numero').value;
+            const res = await fetch('/api/whatsapp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ numero })
+            });
+            const data = await res.json();
+            if (!data.sucesso && data.mensagem) {
+                alert(data.mensagem);
+            } else {
+                alert('Número salvo!');
+            }
+        };
+        document.getElementById('btn-gerar-qr').onclick = async function() {
+            const res = await fetch('/api/qrcode');
+            const data = await res.json();
+            if (!data.sucesso && data.mensagem) {
+                alert(data.mensagem);
+            } else if (data.sucesso && data.qr) {
+                document.getElementById('qr-code-area').innerHTML = `<img id="img-qr-code" src="${data.qr}" alt="QR Code do Cardápio" style="width:160px;">`;
+                document.getElementById('btn-baixar-qr').style.display = '';
+                document.getElementById('btn-baixar-qr').onclick = function() {
+                    const link = document.createElement('a');
+                    link.href = data.qr;
+                    link.download = 'qrcode_cardapio.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                };
+            }
+        };
+        document.getElementById('btn-ver-cardapio-publico').onclick = async function() {
+            // Busca o usuário logado para montar a rota correta do cardápio público
+            const res = await fetch('/api/userinfo');
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.usuarioId) {
+                    window.open(`/cardapio.html?id=${data.usuarioId}`, '_blank');
+                } else {
+                    alert('Erro ao obter usuário.');
+                }
+            } else {
+                window.location.href = '/logincad.html';
+            }
+        };
+        // Mensagem personalizada: carregar e salvar
+        async function carregarMsgPersonalizada() {
+            const res = await fetch('/api/msg_personalizada');
+            const data = await res.json();
+            if (data.sucesso) {
+                document.getElementById('msg-personalizada').value = data.msg || 'Olá, quero pedir';
+            }
+        }
+        // Título público: carregar e salvar
+        async function carregarTituloPublico() {
+            const res = await fetch('/api/titulo_publico');
+            const data = await res.json();
+            if (data.sucesso) {
+                document.getElementById('titulo-publico').value = data.titulo || 'Cardápio Digital';
+            }
+        }
+        async function carregarQrCode() {
+            const res = await fetch('/api/qrcode');
+            const data = await res.json();
+            if (data.sucesso && data.qr) {
+                document.getElementById('qr-code-area').innerHTML = `<img id="img-qr-code" src="${data.qr}" alt="QR Code do Cardápio" style="width:160px;">`;
+                document.getElementById('btn-baixar-qr').style.display = '';
+                document.getElementById('btn-baixar-qr').onclick = function() {
+                    const link = document.createElement('a');
+                    link.href = data.qr;
+                    link.download = 'qrcode_cardapio.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                };
+            } else {
+                document.getElementById('qr-code-area').innerHTML = '<span style="color:#aaa;">QR Code ainda não gerado.</span>';
+                document.getElementById('btn-baixar-qr').style.display = 'none';
+            }
+        }
+        async function carregarCoresPublico() {
+            const res = await fetch('/api/cores_publico');
+            const data = await res.json();
+            if (data.sucesso && data.cores) {
+                document.getElementById('cor-fundo-publico').value = data.cores.fundo || '#101014';
+                document.getElementById('cor-destaque-publico').value = data.cores.destaque || '#00eaff';
+                document.getElementById('cor-card-publico').value = data.cores.card || '#101014';
+            }
+        }
+        document.getElementById('form-cores-publico').onsubmit = async function(e) {
+            e.preventDefault();
+            const fundo = document.getElementById('cor-fundo-publico').value;
+            const destaque = document.getElementById('cor-destaque-publico').value;
+            const card = document.getElementById('cor-card-publico').value;
+            const res = await fetch('/api/cores_publico', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fundo, destaque, card })
+            });
+            const data = await res.json();
+            const feedback = document.getElementById('cores-publico-feedback');
+            if (!data.sucesso) {
+                feedback.textContent = data.mensagem || 'Erro ao salvar cores!';
+                feedback.style.color = 'red';
+            } else {
+                feedback.textContent = 'Cores salvas com sucesso!';
+                feedback.style.color = '#00eaff';
+            }
+        };
+        window.onload = function() {
+            carregarCardapio();
+            carregarMsgPersonalizada();
+            carregarTituloPublico();
+            carregarQrCode();
+            carregarCoresPublico();
+        };
+        document.getElementById('form-msg-personalizada').onsubmit = async function(e) {
+            e.preventDefault();
+            const msg = document.getElementById('msg-personalizada').value;
+            const res = await fetch('/api/msg_personalizada', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ msg })
+            });
+            const data = await res.json();
+            const feedback = document.getElementById('msg-personalizada-feedback');
+            if (!data.sucesso) {
+                feedback.textContent = data.mensagem || 'Erro ao salvar mensagem!';
+                feedback.style.color = 'red';
+            } else {
+                feedback.textContent = 'Mensagem salva com sucesso!';
+                feedback.style.color = '#00eaff';
+            }
+        };
+        document.getElementById('form-titulo_publico').onsubmit = async function(e) {
+            e.preventDefault();
+            const titulo = document.getElementById('titulo-publico').value;
+            const res = await fetch('/api/titulo_publico', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ titulo })
+            });
+            const data = await res.json();
+            const feedback = document.getElementById('titulo-publico-feedback');
+            if (!data.sucesso) {
+                feedback.textContent = data.mensagem || 'Erro ao salvar título!';
+                feedback.style.color = 'red';
+            } else {
+                feedback.textContent = 'Título salvo com sucesso!';
+                feedback.style.color = '#00eaff';
+            }
+        };
+    </script>
+</body>
+</html>
