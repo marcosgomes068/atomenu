@@ -348,7 +348,9 @@ app.get('/api/qrcode', requireLogin, (req, res) => {
             return res.json({ sucesso: true, qr: row.qr_base64 });
         }
         // Gera QR code se não existir
-        const url = `${process.env.PUBLIC_URL || ''}/cardapio.html?id=${usuarioId}`;
+        // Domínio público fixo como fallback
+        const PUBLIC_URL = process.env.PUBLIC_URL || 'https://atomenu-production.up.railway.app';
+        const url = `${PUBLIC_URL}/cardapio.html?id=${usuarioId}`;
         QRCode.toDataURL(url, { width: 320 }, (err, qr_base64) => {
             if (err) return res.json({ sucesso: false, mensagem: 'Erro ao gerar QR code.' });
             db.run('INSERT INTO qrcodes (usuario_id, qr_base64) VALUES (?, ?)', [usuarioId, qr_base64], (err2) => {
